@@ -18,23 +18,20 @@ jobs:
       - name: Siapkan Android SDK untuk Buildozer
         run: |
           export ANDROID_HOME="/usr/local/lib/android/sdk"
+          export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
 
-          echo "Isi Android SDK:"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+
+          echo "Cek Android SDK:"
           ls -la "$ANDROID_HOME"
+
+          echo "Cek cmdline-tools:"
           ls -la "$ANDROID_HOME/cmdline-tools" || true
 
-          mkdir -p "$ANDROID_HOME/tools/bin"
-
-          ln -sf \
-            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
-            "$ANDROID_HOME/tools/bin/sdkmanager"
-
-          chmod +x "$ANDROID_HOME/tools/bin/sdkmanager"
-
           echo "Cek sdkmanager:"
-          "$ANDROID_HOME/tools/bin/sdkmanager" --version
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version
 
-          yes | "$ANDROID_HOME/tools/bin/sdkmanager" --licenses || true
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
 
       - name: Build APK
         run: |
