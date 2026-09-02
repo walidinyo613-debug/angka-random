@@ -17,12 +17,19 @@ jobs:
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/pip install buildozer cython
 
+      - name: Cek Buildozer dan Cython
+        run: |
+          export PATH="$PWD/.venv/bin:$PATH"
+          buildozer --version
+          cython --version
+
       - name: Build APK
         run: |
+          export PATH="$PWD/.venv/bin:$PATH"
           export ANDROID_HOME="/usr/local/lib/android/sdk"
           export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
           export ANDROID_NDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
-          .venv/bin/buildozer android debug
+          buildozer android debug
 
       - name: Simpan APK
         uses: actions/upload-artifact@v4
