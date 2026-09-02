@@ -8,23 +8,19 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Ambil kode
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install Buildozer
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk \
-            python3-pip autoconf automake libtool \
-            pkg-config zlib1g-dev libncurses5-dev \
-            libncursesw5-dev cmake libffi-dev libssl-dev
-
-          pip3 install --user --upgrade buildozer cython
+          python3 -m pip install --user --upgrade buildozer cython
 
       - name: Build APK
         run: |
           export PATH="$HOME/.local/bin:$PATH"
+          export ANDROID_HOME="/usr/local/lib/android/sdk"
+          export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
+          export ANDROID_NDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
           buildozer android debug
 
       - name: Simpan APK
