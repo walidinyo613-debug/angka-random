@@ -15,18 +15,32 @@ jobs:
         run: |
           python3 -m pip install --user --break-system-packages buildozer cython
 
-      - name: Cek Buildozer dan Cython
+      - name: Siapkan Android SDK untuk Buildozer
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          buildozer --version
-          cython --version
+          export ANDROID_HOME="/usr/local/lib/android/sdk"
+
+          echo "Isi Android SDK:"
+          ls -la "$ANDROID_HOME"
+          ls -la "$ANDROID_HOME/cmdline-tools" || true
+
+          mkdir -p "$ANDROID_HOME/tools/bin"
+
+          ln -sf \
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "$ANDROID_HOME/tools/bin/sdkmanager"
+
+          chmod +x "$ANDROID_HOME/tools/bin/sdkmanager"
+
+          echo "Cek sdkmanager:"
+          "$ANDROID_HOME/tools/bin/sdkmanager" --version
+
+          yes | "$ANDROID_HOME/tools/bin/sdkmanager" --licenses || true
 
       - name: Build APK
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           export ANDROID_HOME="/usr/local/lib/android/sdk"
           export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
-          export ANDROID_NDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
 
           buildozer android debug
 
